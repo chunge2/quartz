@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<property name="LOG_HOME" value="../log/quartz" />
+	<property name="FILE_NAME" value="quartz" />
+	
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">	    
+	    <layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>%red(%d{yyyy-MM-dd HH:mm:ss}) %green([%thread]) %highlight(%-5level) %cyan([%logger]) : %msg%n</pattern>
+	    </layout>
+  	</appender>
+
+	<appender name="FILE_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${LOG_HOME}/${FILE_NAME}.log</file>
+	    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/${FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 90 days' worth of history capped at 10GB total size -->
+			<maxHistory>90</maxHistory>
+			<totalSizeCap>10GB</totalSizeCap>
+    	</rollingPolicy>
+		<encoder>
+            <Pattern>[%date{yyyy-MM-dd HH:mm:ss}] [%thread] %-5level [%logger] - %msg%n</Pattern>
+            <charset>UTF-8</charset>
+    	</encoder>
+  	</appender>
+  	
+    <appender name="ERRORLOG_APPENDER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	    <file>${LOG_HOME}/${FILE_NAME}-error.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_HOME}/${FILE_NAME}-error.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 90 days' worth of history capped at 5GB total size -->
+			<maxHistory>90</maxHistory>
+			<totalSizeCap>5GB</totalSizeCap>
+    	</rollingPolicy>
+    	
+        <encoder>
+            <Pattern>[%date{yyyy-MM-dd HH:mm:ss}] [%thread] %-5level [%logger] - %msg%n</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+  	<root level="INFO">
+    	<appender-ref ref="STDOUT" />
+    	<appender-ref ref="FILE_APPENDER" />
+    	<appender-ref ref="ERRORLOG_APPENDER" />
+  	</root>
+
+</configuration>
